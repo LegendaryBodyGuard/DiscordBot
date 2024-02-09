@@ -49,7 +49,7 @@ bot = commands.Bot(command_prefix='!',intents = discord.Intents.all())
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
-@bot.command(name='weather', help='Lets you know the weather. usage example city,State')
+@bot.command(name='weather', help='Lets you know the weather. usage example !weather "city,State"')
 async def getweatherInfo(ctx,location):
     mgr = WEATHER.weather_manager()
     observation = mgr.weather_at_place(location)
@@ -64,10 +64,21 @@ async def getweatherInfo(ctx,location):
     # w.heat_index,              # None
     # w.clouds                  # 75
     # w.weather
-    temp = w.temperature(unit='fahrenheit')
-    status = w.detailed_status
 
-    await ctx.send(f"The weather in {location} is " + str(int(temp['temp'])) + " degrees and " + status)
+    # the ones that are commented out dont work for some reason
+    status = w.detailed_status
+    wind = w.wind()
+    humidity = w.humidity
+    temp = w.temperature(unit='fahrenheit')
+    # rain = w.rain
+    # cloud = w.clouds
+    # weather = w.weather
+
+    await ctx.send(f"The weather in {location}" + "\n" 
+                   + str(int(temp['temp'])) + " degrees and " + status + "\n" 
+                   + "The wind speed is " + str(int(wind['speed'])) + " and deg is " + str(int(wind['deg'])) +"\n"
+                   + "The huminidty is " + str(int(humidity)) + "\n")
+    
     # Will it be clear tomorrow at this time in Milan (Italy) ?
     # forecast = mgr.forecast_at_place('Milan,IT', 'daily')
     # answer = forecast.will_be_clear_at(timestamps.tomorrow())
